@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Particles from "./ParticleBg"; // Ensure file name matches exactly
+import Particles from "./ParticleBg";
 
 const SpaceExplorer = () => {
   const [currentPage, setCurrentPage] = useState("home");
@@ -37,10 +37,16 @@ const SpaceExplorer = () => {
     if (currentPage === "apod") {
       fetchNasaData("apod");
     } else {
-      // Ye line ab har planet ka naam NASA ko bhej degi automatically
       fetchNasaData("search", currentPage);
     }
   }, [currentPage]);
+
+  // CSS for hiding scrollbar while keeping functionality
+  const scrollbarHideStyle = {
+    msOverflowStyle: "none",
+    scrollbarWidth: "none",
+    WebkitOverflowScrolling: "touch",
+  };
 
   return (
     <div className="relative min-h-screen bg-[#020617] text-white flex flex-col font-sans overflow-x-hidden">
@@ -49,31 +55,38 @@ const SpaceExplorer = () => {
         <Particles
           particleCount={300}
           particleSpread={15}
-          speed={0.05} // Isay thoda barha dein taaki movement dikhayi de
-          moveParticlesOnHover={true} // Sabse zaroori: Isay true hona chahiye!
-          particleHoverFactor={2} // Mouse hilne par kitna move kare
-          disableRotation={false} // Check karein ye galti se true toh nahi
+          speed={0.05}
+          moveParticlesOnHover={true}
+          particleHoverFactor={2}
+          disableRotation={false}
           className="w-full h-full"
         />
       </div>
 
       {/* --- UI CONTENT LAYER --- */}
       <div className="relative z-10 flex flex-col min-h-screen">
-        <nav className="fixed top-6 left-0 right-0 z-50 px-4">
+        {/* --- DYNAMIC GLASS NAVBAR --- */}
+        <nav className="fixed top-4 md:top-6 left-0 right-0 z-50 px-4">
           <div className="max-w-fit mx-auto">
-            {" "}
-            {/* max-w-fit se ye buttons ke mutabiq shrink ho jayega */}
-            <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[2.5rem] p-2 flex items-center gap-2 transition-all duration-700 hover:shadow-blue-500/10 hover:border-white/20">
-              {/* Logo - Liquid Drop Style */}
+            <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[2rem] md:rounded-[2.5rem] p-1.5 md:p-2 flex items-center gap-1 md:gap-2 transition-all duration-700">
+              {/* Logo */}
               <div
-                className="px-6 py-2 bg-blue-600/20 rounded-full border border-blue-500/30 text-blue-400 font-black tracking-tighter cursor-pointer hover:bg-blue-600/40 transition-all duration-500 mr-2"
+                className="px-4 md:px-6 py-1.5 md:py-2 bg-blue-600/20 rounded-full border border-blue-500/30 text-blue-400 font-black tracking-tighter cursor-pointer hover:bg-blue-600/40 transition-all duration-500 text-sm md:text-base"
                 onClick={() => setCurrentPage("home")}
               >
-                NASA<span className="text-white">PRO</span>
+                {/* NASA<span className="text-white">PRO</span> */}
+                <img
+                  src="./public/logo1.png"
+                  alt="NASA Logo"
+                  className="w-10 h-9 object-contain"
+                />
               </div>
 
-              {/* Navigation Links - The Liquid Elements */}
-              <div className="flex gap-1 items-center overflow-x-auto no-scrollbar max-w-[300px] md:max-w-none px-2 py-1">
+              {/* Navigation Links - Scrollable on Mobile */}
+              <div
+                className="flex gap-1 items-center overflow-x-auto max-w-[200px] sm:max-w-[400px] md:max-w-none px-1"
+                style={scrollbarHideStyle}
+              >
                 {[
                   "home",
                   "mercury",
@@ -89,22 +102,17 @@ const SpaceExplorer = () => {
                   <button
                     key={page}
                     onClick={() => setCurrentPage(page)}
-                    className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-500 relative group overflow-hidden whitespace-nowrap ${
+                    className={`px-4 md:px-6 py-1.5 md:py-2 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest transition-all duration-500 relative group flex-shrink-0 ${
                       currentPage === page
-                        ? "text-white bg-white/10 shadow-[inset_0_0_15px_rgba(255,255,255,0.1)] border border-white/20"
+                        ? "text-white bg-white/10 border border-white/20 shadow-[inset_0_0_15px_rgba(255,255,255,0.1)]"
                         : "text-gray-400 hover:text-white"
                     }`}
                   >
-                    {/* Background Liquid Hover Effect */}
-                    <span className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-white/5 to-blue-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-
                     <span className="relative z-10">
                       {page === "apod" ? "Daily Photo" : page}
                     </span>
-
-                    {/* Bottom Glow for Active Link */}
                     {currentPage === page && (
-                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent blur-[1px]"></div>
+                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[2px] bg-blue-400 blur-[1px]"></div>
                     )}
                   </button>
                 ))}
@@ -113,20 +121,21 @@ const SpaceExplorer = () => {
           </div>
         </nav>
 
-        <main className="flex-grow max-w-7xl mx-auto w-full px-6 py-12">
+        <main className="flex-grow max-w-7xl mx-auto w-full px-6 pt-32 pb-12">
+          {/* HOME PAGE */}
           {currentPage === "home" && (
             <div className="text-center py-20 flex flex-col items-center">
-              <h1 className="text-5xl md:text-8xl font-black mb-6 bg-gradient-to-b from-white to-blue-900 bg-clip-text text-transparent">
-                STALLAR JOURNEY
+              <h1 className="text-4xl md:text-8xl font-black mb-6 bg-gradient-to-b from-white to-blue-900 bg-clip-text text-transparent leading-tight">
+                STELLAR JOURNEY
               </h1>
-              <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl">
+              <p className="text-base md:text-xl text-gray-400 mb-10 max-w-2xl px-4">
                 Navigate through the cosmos using NASA's live data archives.
                 Experience the beauty of our universe, one planet at a time.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-md">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 w-full max-w-md px-4">
                 <button
                   onClick={() => setCurrentPage("mars")}
-                  className="p-5 bg-orange-600/20 border border-orange-500/50 rounded-2xl font-bold hover:bg-orange-600 transition group"
+                  className="p-4 md:p-5 bg-orange-600/20 border border-orange-500/50 rounded-2xl font-bold hover:bg-orange-600 transition group"
                 >
                   Explore{" "}
                   <span className="group-hover:ml-2 transition-all text-orange-400">
@@ -135,7 +144,7 @@ const SpaceExplorer = () => {
                 </button>
                 <button
                   onClick={() => setCurrentPage("earth")}
-                  className="p-5 bg-blue-600/20 border border-blue-500/50 rounded-2xl font-bold hover:bg-blue-600 transition group"
+                  className="p-4 md:p-5 bg-blue-600/20 border border-blue-500/50 rounded-2xl font-bold hover:bg-blue-600 transition group"
                 >
                   View{" "}
                   <span className="group-hover:ml-2 transition-all text-blue-400">
@@ -146,46 +155,50 @@ const SpaceExplorer = () => {
             </div>
           )}
 
+          {/* LOADING STATE */}
           {loading ? (
             <div className="flex flex-col items-center justify-center py-32 space-y-4">
               <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <p className="animate-pulse text-blue-400 font-mono tracking-widest text-sm">
-                ESTABLISHING UPLINK...
+              <p className="animate-pulse text-blue-400 font-mono tracking-widest text-sm uppercase">
+                Establishing Uplink...
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(currentPage === "earth" || currentPage === "mars") &&
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {/* FIXED: Display results for ALL planets, not just earth/mars */}
+              {currentPage !== "home" &&
+                currentPage !== "apod" &&
                 data?.map &&
                 data.map((item, i) => (
                   <div
                     key={i}
-                    className="bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-500 group"
+                    className="bg-white/5 backdrop-blur-md rounded-3xl overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-500 group"
                   >
-                    <div className="overflow-hidden h-64">
+                    <div className="overflow-hidden h-48 md:h-64">
                       <img
-                        src={item.links[0].href}
+                        src={item.links?.[0]?.href}
                         className="h-full w-full object-cover group-hover:scale-110 transition duration-700"
                         alt="space"
                       />
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-blue-400 font-bold mb-2 truncate">
+                    <div className="p-4 md:p-6">
+                      <h3 className="text-blue-400 font-bold mb-2 truncate text-base md:text-lg">
                         {item.data[0].title}
                       </h3>
-                      <p className="text-sm text-gray-400 line-clamp-2 italic">
+                      <p className="text-xs md:text-sm text-gray-400 line-clamp-2 italic">
                         {item.data[0].description}
                       </p>
                     </div>
                   </div>
                 ))}
 
-              {currentPage === "apod" && data && !data.map && (
-                <div className="col-span-full text-center max-w-4xl mx-auto">
+              {/* APOD SECTION */}
+              {currentPage === "apod" && data && (
+                <div className="col-span-full text-center max-w-4xl mx-auto px-4">
                   <span className="text-blue-500 font-mono text-xs tracking-widest uppercase mb-4 block">
                     Featured Discovery
                   </span>
-                  <h2 className="text-3xl md:text-5xl font-bold mb-8">
+                  <h2 className="text-2xl md:text-5xl font-bold mb-8 leading-tight">
                     {data.title}
                   </h2>
                   <div className="relative group rounded-3xl overflow-hidden mb-10 shadow-2xl border border-white/10">
@@ -195,8 +208,8 @@ const SpaceExplorer = () => {
                       alt="NASA APOD"
                     />
                   </div>
-                  <div className="bg-black/30 backdrop-blur-md p-8 rounded-3xl border border-white/5 text-left">
-                    <p className="text-gray-300 leading-relaxed text-lg first-letter:text-5xl first-letter:font-bold first-letter:mr-3 first-letter:float-left">
+                  <div className="bg-black/30 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-white/5 text-left">
+                    <p className="text-gray-300 leading-relaxed text-sm md:text-lg">
                       {data.explanation}
                     </p>
                   </div>
@@ -206,23 +219,12 @@ const SpaceExplorer = () => {
           )}
         </main>
 
-        <footer className="mt-auto border-t border-white/5 py-12 bg-black/40 backdrop-blur-md text-center">
+        <footer className="mt-auto border-t border-white/5 py-8 md:py-12 bg-black/40 backdrop-blur-md text-center">
           <div className="max-w-7xl mx-auto px-6">
-            <p className="text-gray-500 text-xs tracking-widest uppercase">
+            <p className="text-gray-500 text-[10px] md:text-xs tracking-widest uppercase px-4">
               Data synchronized via NASA Open API Systems •{" "}
               {new Date().getFullYear()}
             </p>
-            <div className="flex justify-center gap-8 mt-6 text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
-              <span className="hover:text-blue-400 cursor-pointer transition">
-                Terminal Access
-              </span>
-              <span className="hover:text-blue-400 cursor-pointer transition">
-                Deep Space Logs
-              </span>
-              <span className="hover:text-blue-400 cursor-pointer transition">
-                Contact Houston
-              </span>
-            </div>
           </div>
         </footer>
       </div>
