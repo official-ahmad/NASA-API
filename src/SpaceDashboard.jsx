@@ -76,7 +76,7 @@ const SpaceExplorer = () => {
               >
                 {/* NASA<span className="text-white">PRO</span> */}
                 <img
-                  src="./public/logo1.png"
+                  src="./logo1.png"
                   alt="NASA Logo"
                   className="w-10 h-9 object-contain"
                 />
